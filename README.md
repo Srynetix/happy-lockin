@@ -14,7 +14,7 @@
 Welcome on my 8th **Ludum Dare** Compo entry!
 
 Initially, I wanted to play with _Godot Engine 4.2_ (version _dev 5_), and it mostly worked for the first 24 hours.  
-But during sunday morning, as I was playing with the _TileMap_, almost all of my tile colliders just dissappeared / where buggy with no reason at all (_I think it has something to do with tile rotations, which does not exist in 4.1.1_).  
+But during sunday morning, as I was playing with the _TileMap_, almost all of my tile colliders just disappeared / were buggy with no reason at all (_I think it has something to do with tile rotations, which does not exist in 4.1.1_).  
 Well then, I migrated the project to version _4.1.1_, added more tiles to my tileset, redrew the buggy tiles, and everything was good!
 
 So, the game! This time, I wanted to do something more... moody.
