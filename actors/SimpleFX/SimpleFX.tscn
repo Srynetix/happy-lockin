@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cadjcjucqn764"]
+
+[ext_resource type="Script" path="res://actors/SimpleFX/SimpleFX.gd" id="1_5ig76"]
+
+[node name="SimpleFX" type="AudioStreamPlayer"]
+script = ExtResource("1_5ig76")

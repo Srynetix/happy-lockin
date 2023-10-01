@@ -1,0 +1,20 @@
+[gd_scene load_steps=6 format=3 uid="uid://cwo60skhuyryv"]
+
+[ext_resource type="PackedScene" uid="uid://dl41c7n6vwui4" path="res://actors/Cell/Cell.tscn" id="1_b1nns"]
+[ext_resource type="Script" path="res://actors/Cell/BoxCell.gd" id="1_duagn"]
+[ext_resource type="AudioStream" uid="uid://ba7bdkwpuodfv" path="res://audio/box_crack.wav" id="3_itxp2"]
+[ext_resource type="Script" path="res://actors/SimpleFX/SimpleFX.gd" id="4_2ripx"]
+[ext_resource type="AudioStream" uid="uid://tik0sp17hj74" path="res://audio/enemy_hit.wav" id="5_1ykgh"]
+
+[node name="BoxCell" instance=ExtResource("1_b1nns")]
+script = ExtResource("1_duagn")
+
+[node name="CrackSFX" type="AudioStreamPlayer" parent="." index="2"]
+unique_name_in_owner = true
+stream = ExtResource("3_itxp2")
+script = ExtResource("4_2ripx")
+
+[node name="HitSFX" type="AudioStreamPlayer" parent="." index="3"]
+unique_name_in_owner = true
+stream = ExtResource("5_1ykgh")
+script = ExtResource("4_2ripx")

@@ -1,0 +1,14 @@
+[gd_scene load_steps=5 format=3 uid="uid://dfuxyja1hx4v4"]
+
+[ext_resource type="PackedScene" uid="uid://dl41c7n6vwui4" path="res://actors/Cell/Cell.tscn" id="1_7vsii"]
+[ext_resource type="Script" path="res://actors/Cell/ItemCell.gd" id="2_jcffg"]
+[ext_resource type="Script" path="res://actors/SimpleFX/SimpleFX.gd" id="3_l8aru"]
+[ext_resource type="AudioStream" uid="uid://f8yuk1qbrh6v" path="res://audio/pick.wav" id="3_omgj6"]
+
+[node name="ItemCell" instance=ExtResource("1_7vsii")]
+script = ExtResource("2_jcffg")
+
+[node name="PickSFX" type="AudioStreamPlayer" parent="." index="2"]
+unique_name_in_owner = true
+stream = ExtResource("3_omgj6")
+script = ExtResource("3_l8aru")

@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://bmasvy6c4ssfj"]
+
+[ext_resource type="AudioStream" uid="uid://bjdyglddfanfm" path="res://audio/theme1.ogg" id="1_2antp"]
+
+[node name="GameMusic" type="AudioStreamPlayer"]
+stream = ExtResource("1_2antp")
+bus = &"Music"

@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://ducyhse5bc6vs"]
+
+[ext_resource type="Script" path="res://actors/SimpleFX/SimpleFX.gd" id="1_4nt4v"]
+[ext_resource type="Script" path="res://actors/Bullet/Bullet.gd" id="1_lcew8"]
+[ext_resource type="AudioStream" uid="uid://cop7oqgqfj4tf" path="res://audio/fire.wav" id="1_lh6v0"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_kqdpn"]
+radius = 6.0
+
+[node name="Bullet" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 3
+motion_mode = 1
+script = ExtResource("1_lcew8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_kqdpn")
+
+[node name="FireSFX" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("1_lh6v0")
+bus = &"FX"
+script = ExtResource("1_4nt4v")
