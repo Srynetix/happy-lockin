@@ -7,12 +7,12 @@ func spawn() -> void:
     var parent_parent = parent.get_parent()
 
     var dup := duplicate() as SimpleVFX
-    parent_parent.add_child(dup)
-    dup.global_position = global_position
-    dup.play_and_remove()
-    # await get_tree().process_frame
+    parent_parent.call_deferred("add_child", dup)
+    dup.set_deferred("global_position", global_position)
+    dup.call_deferred("play_and_remove")
 
 func play_and_remove() -> void:
-    emitting = true
-    await get_tree().create_timer(lifetime).timeout
-    queue_free()
+    if is_inside_tree():
+        emitting = true
+        await get_tree().create_timer(lifetime).timeout
+        queue_free()

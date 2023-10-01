@@ -2,7 +2,6 @@ extends Node2D
 
 @onready var _player := %Player as Player
 @onready var _camera := %Camera2D as SxFxCamera
-@onready var _mask := $UI/Mask as TextureRect
 @onready var _scanner := %AlarmScanner as AlarmScanner
 @onready var _map := %TileMap as TileMap
 
@@ -32,8 +31,14 @@ const ITEM_CELL_SCENE := preload("res://actors/Cell/ItemCell.tscn")
 const ZONE_CELL_SCENE := preload("res://actors/Cell/ZoneCell.tscn")
 const PLAYER_SCENE := preload("res://actors/Player/Player.tscn")
 
+var _started_at: int = 0
+
 func _ready() -> void:
+    _started_at = int(Time.get_ticks_msec() / 1000.0)
+
+    GameMusic.fade_in()
     if !GameMusic.playing:
+        GameMusic.set_track(GameMusic.Track.Theme1)
         GameMusic.play()
 
     _scanner.scan_started.connect(func():
@@ -138,13 +143,29 @@ func _ready() -> void:
             GameMusic.fade_out()
             %ChromaticVFX.enabled = true
             %ChromaticVFX/AnimationPlayer.play("wave")
-            pass
         )
         weird.weird_stopped.connect(func():
             GameMusic.fade_in()
             %ChromaticVFX/AnimationPlayer.play("fade_out")
-            pass
         )
+
+    # End zones
+    for node in get_tree().get_nodes_in_group("end_zone"):
+        var zone := node as EndZone
+        zone.finished.connect(func():
+            GameMusic.fade_out()
+            GameData.last_level_keys = [_keys_count, _initial_keys_count]
+            GameData.last_level_enemies = [_enemy_killed, _initial_enemy_count]
+            GameData.last_level_secrets = [_secrets_count, _initial_secrets_count]
+            GameData.last_level_time = int(float(Time.get_ticks_msec()) / 1000.0 - _started_at)
+            GameMusic.fade_out_and_stop()
+            GameSceneTransitioner.fade_to_scene_path("res://screens/EndGame.tscn", 0.5)
+        )
+
+func _input(event: InputEvent) -> void:
+    if event is InputEventKey:
+        if event.pressed && event.keycode == KEY_F2:
+            %TopHUD.visible = !%TopHUD.visible
 
 func _process(_delta: float) -> void:
     _camera.global_position = _player.global_position.round()
@@ -169,14 +190,6 @@ func _process(_delta: float) -> void:
         _timer_ui.text = "Scanning in\n%2.2f seconds" % _scanner.get_remaining_seconds_before_scan()
         _camera.shake_ratio = 0.0
 
-func _input(event: InputEvent) -> void:
-    if event is InputEventKey:
-        if event.pressed && event.keycode == KEY_SPACE:
-            _mask.visible = !_mask.visible
-
-        if event.pressed && event.keycode == KEY_F1:
-            _scanner.trigger()
-
 func _on_player_detected() -> void:
     _player.kill()
     _scanner.reset()
@@ -199,9 +212,10 @@ func _on_player_dead() -> void:
     _is_game_over = true
     _scanner.stop()
     %GameOverUI.visible = true
+    GameMusic.fade_out()
 
     await get_tree().create_timer(1.0).timeout
-    GameSceneTransitioner.fade_to_scene_path("res://tests/TestLevel.tscn")
+    GameSceneTransitioner.fade_to_scene_path("res://tests/TestLevel.tscn", 0.5)
 
 func _on_enemy_dead(enemy: Player) -> void:
     _enemy_killed += 1
@@ -209,7 +223,8 @@ func _on_enemy_dead(enemy: Player) -> void:
 
 func _on_item_picked(item: ItemCell) -> void:
     _keys_count += 1
-    _unlock_locks()
+    if _keys_count == _initial_keys_count:
+        _unlock_locks()
     item.queue_free()
 
 func _unlock_locks() -> void:

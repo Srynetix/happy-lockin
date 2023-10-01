@@ -5,7 +5,7 @@
 [ext_resource type="AudioStream" uid="uid://cop7oqgqfj4tf" path="res://audio/fire.wav" id="1_lh6v0"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_kqdpn"]
-radius = 6.0
+radius = 4.0
 
 [node name="Bullet" type="CharacterBody2D"]
 collision_layer = 4

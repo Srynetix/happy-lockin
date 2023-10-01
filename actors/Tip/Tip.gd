@@ -32,4 +32,4 @@ func _show_text() -> void:
 
     var tween := create_tween()
     tween.tween_property(self, "modulate", Color.WHITE, 0.5).from(Color.TRANSPARENT).set_ease(Tween.EASE_IN)
-    tween.tween_property(self, "modulate", Color.TRANSPARENT, 0.5).from(Color.WHITE).set_ease(Tween.EASE_IN).set_delay(VISIBILITY_DURATION)
+    # tween.tween_property(self, "modulate", Color.TRANSPARENT, 0.5).from(Color.WHITE).set_ease(Tween.EASE_IN).set_delay(VISIBILITY_DURATION)

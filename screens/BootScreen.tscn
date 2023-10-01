@@ -39,7 +39,9 @@ text = "[center]Made with [rainbow]Godot Engine[/rainbow]
 for Ludum Dare 54[/center]
 
 [center]The theme was
-[wave][color=#222]Limited Space[/color][/wave][/center]"
+[wave][color=#222]Limited Space[/color][/wave][/center]
+
+[center][font_size=18]Press ALT+ENTER to toggle fullscreen[/font_size][/center]"
 fit_content = true
 scroll_active = false
 shortcut_keys_enabled = false

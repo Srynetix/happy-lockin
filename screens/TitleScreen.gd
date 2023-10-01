@@ -7,8 +7,13 @@ class_name TitleScreen
 @onready var _music_volume := %MusicVolume as HSlider
 
 func _ready():
+    if !GameMusic.playing:
+        GameMusic.set_track(GameMusic.Track.Intro)
+        GameMusic.play()
+
     _start_game.pressed.connect(func():
-        GameSceneTransitioner.fade_to_scene_path("res://screens/HowToPlayScreen.tscn")
+        GameMusic.fade_out_and_stop()
+        GameSceneTransitioner.fade_to_scene_path("res://screens/HowToPlayScreen.tscn", 0.5)
     )
 
     _fx_volume.value_changed.connect(func(value: float):

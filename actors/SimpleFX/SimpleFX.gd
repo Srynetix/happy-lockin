@@ -7,11 +7,11 @@ func spawn() -> void:
     var parent_parent = parent.get_parent()
 
     var dup := duplicate() as SimpleFX
-    parent_parent.add_child(dup)
-    dup.play_and_remove()
-    # await get_tree().process_frame
+    parent_parent.call_deferred("add_child", dup)
+    dup.call_deferred("play_and_remove")
 
 func play_and_remove() -> void:
-    play()
-    await finished
-    queue_free()
+    if is_inside_tree():
+        play()
+        await finished
+        queue_free()

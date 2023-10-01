@@ -1,0 +1,62 @@
+[gd_scene load_steps=3 format=3 uid="uid://dej41asdq8k1w"]
+
+[ext_resource type="Script" path="res://screens/Credits.gd" id="1_8iqta"]
+[ext_resource type="Texture2D" uid="uid://cbmn1lypvm6g5" path="res://art/happy.png" id="2_5dcpr"]
+
+[node name="Credits" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_8iqta")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Happy" type="TextureRect" parent="CenterContainer"]
+unique_name_in_owner = true
+modulate = Color(0, 0.227451, 1, 1)
+custom_minimum_size = Vector2(1280, 720)
+layout_mode = 2
+texture = ExtResource("2_5dcpr")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 40
+
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Thanks for playing!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Instructions" type="RichTextLabel" parent="CenterContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+bbcode_enabled = true
+text = "[center]If you liked the game, [url=https://ldjam.com/foobar]please let me know[/url].
+Who knows... more levels in the future?[/center]"
+fit_content = true
+scroll_active = false

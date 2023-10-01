@@ -1,0 +1,133 @@
+[gd_scene load_steps=2 format=3 uid="uid://dwae41fa8jg2q"]
+
+[ext_resource type="Script" path="res://screens/EndGame.gd" id="1_u3ygs"]
+
+[node name="EndGame" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_u3ygs")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Margin/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 48
+text = "Level Cleared!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Score" type="VBoxContainer" parent="Margin/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_constants/separation = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Margin/VBoxContainer/Score"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="Margin/VBoxContainer/Score/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 32
+text = "Keys found:"
+
+[node name="Keys" type="Label" parent="Margin/VBoxContainer/Score/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "0"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Margin/VBoxContainer/Score"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="Margin/VBoxContainer/Score/HBoxContainer2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Enemies killed:"
+
+[node name="Enemies" type="Label" parent="Margin/VBoxContainer/Score/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "0"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Margin/VBoxContainer/Score"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="Margin/VBoxContainer/Score/HBoxContainer3"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Secrets found:"
+
+[node name="Secrets" type="Label" parent="Margin/VBoxContainer/Score/HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "0"
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="Margin/VBoxContainer/Score"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="Margin/VBoxContainer/Score/HBoxContainer5"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Time:"
+
+[node name="Time" type="Label" parent="Margin/VBoxContainer/Score/HBoxContainer5"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "0"
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Margin/VBoxContainer/Score"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="Margin/VBoxContainer/Score/HBoxContainer4"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Total score:"
+
+[node name="TotalScore" type="Label" parent="Margin/VBoxContainer/Score/HBoxContainer4"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "0"
+
+[node name="Commentary" type="Label" parent="Margin/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 8
+text = "Not bad."
+horizontal_alignment = 1
+vertical_alignment = 1

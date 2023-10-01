@@ -1,6 +1,46 @@
-[gd_scene load_steps=2 format=3 uid="uid://wf8t61c5yh13"]
+[gd_scene load_steps=7 format=3 uid="uid://wf8t61c5yh13"]
 
 [ext_resource type="Script" path="res://screens/TitleScreen.gd" id="1_k212t"]
+[ext_resource type="Texture2D" uid="uid://cbmn1lypvm6g5" path="res://art/happy.png" id="2_mlhdv"]
+[ext_resource type="Script" path="res://addons/sxgd/nodes/fx/screen-effects/SxFxBetterBlur/SxFxBetterBlur.gd" id="3_2iqc8"]
+
+[sub_resource type="Animation" id="Animation_gqv7e"]
+resource_name = "wave"
+length = 4.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Happy:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2, 3, 4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Color(0.964706, 0, 1, 0), Color(0.176471, 0.152941, 1, 0.411765), Color(0.964706, 0, 1, 0), Color(1, 0.901961, 0.92549, 0.380392), Color(1, 0.901961, 0.92549, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_1v00s"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Happy:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.964706, 0, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_8jsw5"]
+_data = {
+"RESET": SubResource("Animation_1v00s"),
+"wave": SubResource("Animation_gqv7e")
+}
 
 [node name="TitleScreen" type="Control"]
 layout_mode = 3
@@ -20,43 +60,78 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
-[node name="Menu" type="VBoxContainer" parent="."]
+[node name="Happy" type="TextureRect" parent="."]
+modulate = Color(0.964706, 0, 1, 0)
 layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_mlhdv")
+stretch_mode = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Happy"]
+root_node = NodePath("../..")
+autoplay = "wave"
+libraries = {
+"": SubResource("AnimationLibrary_8jsw5")
+}
+
+[node name="FX" type="Control" parent="."]
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("3_2iqc8")
+strength = 10.0
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Menu" type="VBoxContainer" parent="CanvasLayer"]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+offset_left = -160.0
+offset_top = -117.0
+offset_right = 160.0
+offset_bottom = 117.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 40
 
-[node name="Buttons" type="VBoxContainer" parent="Menu"]
+[node name="Label" type="RichTextLabel" parent="CanvasLayer/Menu"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 48
+bbcode_enabled = true
+text = "[center][shake rate=0.5 level=50]Happy Lockin'[/shake][/center]"
+fit_content = true
+
+[node name="Buttons" type="VBoxContainer" parent="CanvasLayer/Menu"]
 layout_mode = 2
 
-[node name="StartGame" type="Button" parent="Menu/Buttons"]
+[node name="StartGame" type="Button" parent="CanvasLayer/Menu/Buttons"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Start game"
+text = "Try to escape"
 
-[node name="Options" type="VBoxContainer" parent="Menu"]
+[node name="Options" type="VBoxContainer" parent="CanvasLayer/Menu"]
 layout_mode = 2
 
-[node name="FXVolumeGroup" type="HBoxContainer" parent="Menu/Options"]
+[node name="FXVolumeGroup" type="HBoxContainer" parent="CanvasLayer/Menu/Options"]
 layout_mode = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="Label" type="Label" parent="Menu/Options/FXVolumeGroup"]
+[node name="Label" type="Label" parent="CanvasLayer/Menu/Options/FXVolumeGroup"]
 layout_mode = 2
 size_flags_horizontal = 2
 text = "FX Volume"
 
-[node name="FXVolume" type="HSlider" parent="Menu/Options/FXVolumeGroup"]
+[node name="FXVolume" type="HSlider" parent="CanvasLayer/Menu/Options/FXVolumeGroup"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
@@ -64,17 +139,17 @@ size_flags_vertical = 4
 max_value = 1.0
 step = 0.01
 
-[node name="MusicVolumeGroup" type="HBoxContainer" parent="Menu/Options"]
+[node name="MusicVolumeGroup" type="HBoxContainer" parent="CanvasLayer/Menu/Options"]
 layout_mode = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="Label" type="Label" parent="Menu/Options/MusicVolumeGroup"]
+[node name="Label" type="Label" parent="CanvasLayer/Menu/Options/MusicVolumeGroup"]
 layout_mode = 2
 size_flags_horizontal = 2
 text = "Music Volume"
 
-[node name="MusicVolume" type="HSlider" parent="Menu/Options/MusicVolumeGroup"]
+[node name="MusicVolume" type="HSlider" parent="CanvasLayer/Menu/Options/MusicVolumeGroup"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2

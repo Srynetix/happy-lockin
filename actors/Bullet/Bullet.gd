@@ -1,9 +1,8 @@
 extends CharacterBody2D
 class_name Bullet
 
-
 const BULLET_SCENE := preload("res://actors/Bullet/Bullet2.tscn")
-const BULLET_SIZE := 6.0
+const BULLET_SIZE := 4.0
 const BULLET_SPEED := 800.0
 
 @onready var _fire_sfx := %FireSFX as SimpleFX

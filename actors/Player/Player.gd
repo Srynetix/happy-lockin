@@ -14,8 +14,8 @@ const MOVE_DAMPING := 0.75
 
 const AI_MOVE_SPEED := 10
 
-const ARROW_MARGIN := 24
-const ARROW_SIZE := 4
+const ARROW_MARGIN := 22
+const ARROW_SIZE := 3
 const ARROW_COLOR := Color.ALICE_BLUE
 
 const FIRE_COOLDOWN := 0.05
@@ -30,6 +30,7 @@ const ZONE_DETECTION_THRESHOLD := 0.5
 @onready var _sprite := %Sprite2D as Sprite2D
 @onready var _area := %Area as Area2D
 @onready var _kill_sfx := %KillSFX as SimpleFX
+@onready var _kill_vfx := %KillVFX as SimpleVFX
 @onready var _hit_sfx := %HitSFX as SimpleFX
 
 var _enemy_ready_to_fire := false
@@ -77,11 +78,6 @@ func _ready() -> void:
                 _current_zone_cell = area
                 _on_zone_entered(area)
         )
-        _area.area_exited.connect(func(area: Area2D):
-            if area is ZoneCell:
-                if _current_zone_cell != null && _current_zone_cell == area:
-                    _on_zone_exited(area)
-        )
 
 
 func _on_zone_entered(zone: ZoneCell) -> void:
@@ -95,13 +91,12 @@ func _on_zone_exited(zone: ZoneCell) -> void:
 
 
 func _process(_delta: float) -> void:
-    if is_safe:
-        _sprite.modulate = Color.GREEN
+    if behavior_type == BehaviorType.Player:
+        _sprite.modulate = Color.WHITE
     else:
-        if behavior_type == BehaviorType.Player:
-            _sprite.modulate = Color.WHITE
-        else:
-            _sprite.modulate = Color.RED
+        _sprite.modulate = Color.RED
+
+    _sprite.rotation = aim_direction.angle()
 
     queue_redraw()
 
@@ -190,6 +185,12 @@ func _physics_process(_delta: float) -> void:
         else:
             aim_direction = player_direction
 
+    # Invalidate zone cell
+    if _current_zone_cell != null:
+        if !_current_zone_cell.overlaps_area(_area):
+            _on_zone_exited(_current_zone_cell)
+            _current_zone_cell = null
+
 func _draw() -> void:
     _draw_arrow()
 
@@ -199,6 +200,7 @@ func _draw_arrow() -> void:
 func kill() -> void:
     set_physics_process(false)
     _kill_sfx.spawn()
+    _kill_vfx.spawn()
     _dead = true
     dead.emit()
 

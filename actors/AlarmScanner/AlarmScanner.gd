@@ -18,7 +18,7 @@ enum ScanState {
 @onready var _shape := _collision_shape.shape as CircleShape2D
 @onready var _scan_sfx := %ScanSFX as AudioStreamPlayer
 
-var _initial_scan_delay := 10.0
+var _initial_scan_delay := 15.0
 var _initial_scan_radius := 1000.0
 
 var _scan_speed := 4.0
@@ -30,7 +30,6 @@ var _current_scan_radius := _initial_scan_radius
 func set_scan_radius(radius: float) -> void:
     _initial_scan_radius = radius
     _current_scan_radius = radius
-    _set_state(ScanState.Init)
 
 func is_scanning() -> bool:
     return _scan_state == ScanState.Scan
@@ -40,6 +39,9 @@ func get_remaining_seconds_before_scan() -> float:
 
 func _ready() -> void:
     _set_state(ScanState.Init)
+
+    # Initial delay is shorter
+    _current_scan_delay = 5.0
 
     _shape.radius = _initial_scan_radius
     _area.area_exited.connect(_on_area_exited)

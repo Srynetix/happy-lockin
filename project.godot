@@ -10,10 +10,15 @@ config_version=5
 
 [application]
 
-config/name="Ludum Dare 54"
+config/name="Happy Lockin'"
+config/description="A Ludum Dare 54 game"
 run/main_scene="res://screens/BootScreen.tscn"
 config/features=PackedStringArray("4.1", "GL Compatibility")
-config/icon="res://icon.svg"
+boot_splash/bg_color=Color(0, 0, 0, 1)
+boot_splash/show_image=false
+boot_splash/fullsize=false
+boot_splash/use_filter=false
+config/icon="res://art/icon.png"
 
 [autoload]
 
