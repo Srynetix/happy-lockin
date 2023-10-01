@@ -12,9 +12,11 @@ script = ExtResource("1_duagn")
 [node name="CrackSFX" type="AudioStreamPlayer" parent="." index="2"]
 unique_name_in_owner = true
 stream = ExtResource("3_itxp2")
+bus = &"FX"
 script = ExtResource("4_2ripx")
 
 [node name="HitSFX" type="AudioStreamPlayer" parent="." index="3"]
 unique_name_in_owner = true
 stream = ExtResource("5_1ykgh")
+bus = &"FX"
 script = ExtResource("4_2ripx")

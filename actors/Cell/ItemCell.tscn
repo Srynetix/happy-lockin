@@ -11,4 +11,5 @@ script = ExtResource("2_jcffg")
 [node name="PickSFX" type="AudioStreamPlayer" parent="." index="2"]
 unique_name_in_owner = true
 stream = ExtResource("3_omgj6")
+bus = &"FX"
 script = ExtResource("3_l8aru")

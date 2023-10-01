@@ -5,7 +5,9 @@ extends Node2D
 @onready var _mask := $UI/Mask as TextureRect
 @onready var _scanner := %AlarmScanner as AlarmScanner
 @onready var _map := %TileMap as TileMap
-@onready var _cells := %Cells as Node2D
+
+@onready var _middleground_cells := %MiddlegroundCells as Node2D
+@onready var _foreground_cells := %ForegroundCells as Node2D
 
 @onready var _health_ui := %HealthUI as Label
 @onready var _score_ui := %ScoreUI as Label
@@ -37,18 +39,18 @@ func _ready() -> void:
 
     %UI.visible = true
 
-    var way_atlas_coords := Vector2(2, 3)
-
-    # Set radius
     var size = _map.get_used_rect()
     _scanner.set_scan_radius(size.size.length() / 2.0 * 64.0)
 
+    var middleground_layer_id := 2
+    var foreground_layer_id := 3
+
     # Spawn boxes
-    for cell_position in _map.get_used_cells(0):
-        var cell_tile_data := _map.get_cell_tile_data(0, cell_position)
+    for cell_position in _map.get_used_cells(middleground_layer_id):
+        var cell_tile_data := _map.get_cell_tile_data(middleground_layer_id, cell_position)
         var cell_name := cell_tile_data.get_custom_data("name") as String
-        var source_id := _map.get_cell_source_id(0, cell_position)
-        var atlas_coords := _map.get_cell_atlas_coords(0, cell_position)
+        var source_id := _map.get_cell_source_id(middleground_layer_id, cell_position)
+        var atlas_coords := _map.get_cell_atlas_coords(middleground_layer_id, cell_position)
         var tileset_source := _map.tile_set.get_source(source_id) as TileSetAtlasSource
         var texture_region := tileset_source.get_tile_texture_region(atlas_coords)
 
@@ -56,7 +58,7 @@ func _ready() -> void:
             var cell_instance := BOX_CELL_SCENE.instantiate() as BoxCell
             cell_instance.broken.connect(_on_box_broken.bind(cell_instance))
 
-            _cells.add_child(cell_instance)
+            _middleground_cells.add_child(cell_instance)
             cell_instance.position = (cell_position * 64.0) + (64.0 / 2.0) * Vector2.ONE
 
             var sprite := cell_instance.get_node("Sprite2D") as Sprite2D
@@ -65,13 +67,13 @@ func _ready() -> void:
             sprite.region_rect = texture_region
 
             # Clear cell
-            _map.set_cell(0, cell_position, source_id, way_atlas_coords)
+            _map.set_cell(middleground_layer_id, cell_position, -1)
 
         elif cell_name == "item":
             var cell_instance := ITEM_CELL_SCENE.instantiate() as ItemCell
             cell_instance.picked.connect(_on_item_picked.bind(cell_instance))
 
-            _cells.add_child(cell_instance)
+            _middleground_cells.add_child(cell_instance)
             cell_instance.position = (cell_position * 64.0) + (64.0 / 2.0) * Vector2.ONE
 
             var sprite := cell_instance.get_node("Sprite2D") as Sprite2D
@@ -80,13 +82,35 @@ func _ready() -> void:
             sprite.region_rect = texture_region
 
             # Clear cell
-            _map.set_cell(0, cell_position, source_id, way_atlas_coords)
+            _map.set_cell(middleground_layer_id, cell_position, -1)
 
             _initial_keys_count += 1
 
-        elif cell_name == "safe":
+        elif cell_name == "enemy":
+            var enemy := PLAYER_SCENE.instantiate() as Player
+            enemy.fired.connect(_on_player_fire.bind(enemy))
+            enemy.dead.connect(_on_enemy_dead.bind(enemy))
+
+            enemy.behavior_type = Player.BehaviorType.Enemy
+            _middleground_cells.add_child(enemy)
+            enemy.position = (cell_position * 64.0) + (64.0 / 2.0) * Vector2.ONE
+
+            _map.set_cell(middleground_layer_id, cell_position, -1)
+
+            _initial_enemy_count += 1
+
+    # Spawn foreground elements
+    for cell_position in _map.get_used_cells(foreground_layer_id):
+        var cell_tile_data := _map.get_cell_tile_data(foreground_layer_id, cell_position)
+        var cell_name := cell_tile_data.get_custom_data("name") as String
+        var source_id := _map.get_cell_source_id(foreground_layer_id, cell_position)
+        var atlas_coords := _map.get_cell_atlas_coords(foreground_layer_id, cell_position)
+        var tileset_source := _map.tile_set.get_source(source_id) as TileSetAtlasSource
+        var texture_region := tileset_source.get_tile_texture_region(atlas_coords)
+
+        if cell_name == "safe":
             var cell_instance := ZONE_CELL_SCENE.instantiate() as ZoneCell
-            _cells.add_child(cell_instance)
+            _foreground_cells.add_child(cell_instance)
             cell_instance.position = (cell_position * 64.0) + (64.0 / 2.0) * Vector2.ONE
 
             var sprite := cell_instance.get_node("Sprite2D") as Sprite2D
@@ -97,20 +121,7 @@ func _ready() -> void:
             cell_instance.effect = ZoneCell.ZoneCellEffect.Safe
 
             # Clear cell
-            _map.set_cell(0, cell_position, source_id, way_atlas_coords)
-
-        elif cell_name == "enemy":
-            var enemy := PLAYER_SCENE.instantiate() as Player
-            enemy.fired.connect(_on_player_fire.bind(enemy))
-            enemy.dead.connect(_on_enemy_dead.bind(enemy))
-
-            enemy.behavior_type = Player.BehaviorType.Enemy
-            _cells.add_child(enemy)
-            enemy.position = (cell_position * 64.0) + (64.0 / 2.0) * Vector2.ONE
-
-            _map.set_cell(0, cell_position, source_id, way_atlas_coords)
-
-            _initial_enemy_count += 1
+            _map.set_cell(foreground_layer_id, cell_position, -1)
 
 
 func _process(_delta: float) -> void:
@@ -148,6 +159,10 @@ func _on_player_fire(fire_position: Vector2, fire_direction: Vector2, player: Pl
     bullet.direction = fire_direction
     bullet.add_collision_exception_with(player)
     add_child(bullet)
+
+    if player.behavior_type == Player.BehaviorType.Enemy:
+        bullet.color = Color.LIGHT_CORAL
+        bullet.max_bounces = 0
 
 func _on_player_dead() -> void:
     _is_game_over = true

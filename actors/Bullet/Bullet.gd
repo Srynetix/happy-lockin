@@ -1,7 +1,6 @@
 extends CharacterBody2D
 class_name Bullet
 
-const MAX_BOUNCES := 1
 
 const BULLET_SCENE := preload("res://actors/Bullet/Bullet2.tscn")
 const BULLET_SIZE := 6.0
@@ -9,7 +8,9 @@ const BULLET_SPEED := 800.0
 
 @onready var _fire_sfx := %FireSFX as SimpleFX
 
+var color := Color.LIGHT_GREEN
 var direction := Vector2.LEFT
+var max_bounces := 1
 
 var _bounces := 0
 
@@ -33,7 +34,7 @@ func _physics_process(delta: float) -> void:
             collider.hit()
             queue_free()
 
-        if _bounces < MAX_BOUNCES:
+        if _bounces < max_bounces:
             # Let's bounce!
             direction = direction.bounce(collision.get_normal())
             _bounces += 1
@@ -42,4 +43,4 @@ func _physics_process(delta: float) -> void:
 
 
 func _draw() -> void:
-    draw_circle(Vector2.ZERO, BULLET_SIZE, Color.LIGHT_GREEN)
+    draw_circle(Vector2.ZERO, BULLET_SIZE, color)

@@ -11,6 +11,7 @@ collision_mask = 2
 script = ExtResource("2_01hpb")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_q03rp")
