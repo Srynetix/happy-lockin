@@ -40,7 +40,7 @@ var _hit_timer := Timer.new()
 
 var _current_zone_cell: ZoneCell = null
 
-var max_life_points := 5
+var max_life_points := 8
 var aim_direction := Vector2.RIGHT
 var acceleration := Vector2.ZERO
 var is_safe := false
@@ -56,6 +56,8 @@ func _ready() -> void:
     if behavior_type == BehaviorType.Player:
         _fire_timer.wait_time = FIRE_COOLDOWN
     else:
+        max_life_points = 5
+        _current_life_points = max_life_points
         _fire_timer.wait_time = ENEMY_FIRE_COOLDOWN
 
     _fire_timer.autostart = false

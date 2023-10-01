@@ -34,11 +34,11 @@ func _input(event: InputEvent) -> void:
             else:
                 DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 
-        elif event.pressed && event.keycode == KEY_F3:
-            var img := get_viewport().get_texture().get_image()
-            var frame := Time.get_ticks_msec()
-            img.save_png("./screenshot-%d.png" % frame)
-            print("SCREENSHOT TAKEN")
+        # elif event.pressed && event.keycode == KEY_F3:
+        #     var img := get_viewport().get_texture().get_image()
+        #     var frame := Time.get_ticks_msec()
+        #     img.save_png("./screenshot-%d.png" % frame)
+        #     print("SCREENSHOT TAKEN")
 
 func _set_bus_volume(bus_name: String, linear_value: float) -> void:
     var bus_id := AudioServer.get_bus_index(bus_name)
