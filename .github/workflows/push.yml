@@ -22,3 +22,17 @@ jobs:
       platform: Windows
       name: happy-lockin
       output_name: HappyLockin.exe
+
+  build-mac:
+    uses: Srynetix/godot-github-workflows/.github/workflows/build-game-4.1.1.yml@main
+    with:
+      platform: macOS
+      name: happy-lockin
+      output_name: HappyLockin.macos.zip
+
+  build-linux:
+    uses: Srynetix/godot-github-workflows/.github/workflows/build-game-4.1.1.yml@main
+    with:
+      platform: Linux
+      name: happy-lockin
+      output_name: HappyLockin.linux.x86_64
