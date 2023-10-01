@@ -1,0 +1,24 @@
+name: Push builds
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-web:
+    permissions:
+      contents: write
+
+    uses: Srynetix/godot-github-workflows/.github/workflows/build-game-4.1.1.yml@main
+    with:
+      platform: Web
+      name: happy-lockin
+      output_name: index.html
+
+  build-windows:
+    uses: Srynetix/godot-github-workflows/.github/workflows/build-game-4.1.1.yml@main
+    with:
+      platform: Windows
+      name: happy-lockin
+      output_name: HappyLockin.exe
