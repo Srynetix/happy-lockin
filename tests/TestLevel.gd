@@ -99,16 +99,7 @@ func _ready() -> void:
 
             _initial_enemy_count += 1
 
-    # Spawn foreground elements
-    for cell_position in _map.get_used_cells(foreground_layer_id):
-        var cell_tile_data := _map.get_cell_tile_data(foreground_layer_id, cell_position)
-        var cell_name := cell_tile_data.get_custom_data("name") as String
-        var source_id := _map.get_cell_source_id(foreground_layer_id, cell_position)
-        var atlas_coords := _map.get_cell_atlas_coords(foreground_layer_id, cell_position)
-        var tileset_source := _map.tile_set.get_source(source_id) as TileSetAtlasSource
-        var texture_region := tileset_source.get_tile_texture_region(atlas_coords)
-
-        if cell_name == "safe":
+        elif cell_name == "safe":
             var cell_instance := ZONE_CELL_SCENE.instantiate() as ZoneCell
             _foreground_cells.add_child(cell_instance)
             cell_instance.position = (cell_position * 64.0) + (64.0 / 2.0) * Vector2.ONE
@@ -120,8 +111,7 @@ func _ready() -> void:
 
             cell_instance.effect = ZoneCell.ZoneCellEffect.Safe
 
-            # Clear cell
-            _map.set_cell(foreground_layer_id, cell_position, -1)
+            _map.set_cell(middleground_layer_id, cell_position, -1)
 
 
 func _process(_delta: float) -> void:
