@@ -56,7 +56,7 @@ vertical_alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 bbcode_enabled = true
-text = "[center]If you liked the game, [url=https://ldjam.com/foobar]please let me know[/url].
+text = "[center]If you liked the game, [url=https://ldjam.com/events/ludum-dare/54/happy-lockin]please let me know[/url].
 Who knows... more levels in the future?[/center]"
 fit_content = true
 scroll_active = false
