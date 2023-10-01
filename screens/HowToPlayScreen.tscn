@@ -1,0 +1,62 @@
+[gd_scene load_steps=2 format=3 uid="uid://cprir8eogi6ga"]
+
+[ext_resource type="Script" path="res://screens/HowToPlayScreen.gd" id="1_e3qqx"]
+
+[node name="HowToPlayScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_e3qqx")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Margin/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "How to play"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Instructions" type="RichTextLabel" parent="Margin/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_font_sizes/normal_font_size = 34
+bbcode_enabled = true
+text = "[center]Use W/A/S/D to [wave]move[/wave]
+
+Use the mouse to  [tornado]aim[/tornado]
+
+Use LEFT CLICK to [shake]shoot[/shake][/center]"
+fit_content = true
+
+[node name="Message" type="RichTextLabel" parent="Margin/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 34
+bbcode_enabled = true
+text = "[center][color=#222]Good luck.[/color][/center]"
+fit_content = true

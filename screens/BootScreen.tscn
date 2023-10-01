@@ -35,8 +35,11 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/normal_font_size = 34
 bbcode_enabled = true
-text = "[center]Made with Godot Engine
-for Ludum Dare 54[/center]"
+text = "[center]Made with [rainbow]Godot Engine[/rainbow]
+for Ludum Dare 54[/center]
+
+[center]The theme was
+[wave][color=#222]Limited Space[/color][/wave][/center]"
 fit_content = true
 scroll_active = false
 shortcut_keys_enabled = false

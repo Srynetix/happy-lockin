@@ -6,6 +6,8 @@
 [ext_resource type="AudioStream" uid="uid://f8yuk1qbrh6v" path="res://audio/pick.wav" id="3_omgj6"]
 
 [node name="ItemCell" instance=ExtResource("1_7vsii")]
+collision_layer = 32
+collision_mask = 2
 script = ExtResource("2_jcffg")
 
 [node name="PickSFX" type="AudioStreamPlayer" parent="." index="2"]

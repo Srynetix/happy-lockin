@@ -1,7 +1,7 @@
 extends Node2D
 
 @onready var _player := %Player as Player
-@onready var _camera := %Camera2D as Camera2D
+@onready var _camera := %Camera2D as SxFxCamera
 @onready var _mask := $UI/Mask as TextureRect
 @onready var _scanner := %AlarmScanner as AlarmScanner
 @onready var _map := %TileMap as TileMap
@@ -9,7 +9,7 @@ extends Node2D
 @onready var _middleground_cells := %MiddlegroundCells as Node2D
 @onready var _foreground_cells := %ForegroundCells as Node2D
 
-@onready var _health_ui := %HealthUI as Label
+@onready var _health_ui := %HealthUI as ProgressBar
 @onready var _score_ui := %ScoreUI as Label
 @onready var _timer_ui := %TimerUI as Label
 
@@ -21,7 +21,11 @@ var _secrets_count := 0
 
 var _initial_keys_count := 0
 var _initial_enemy_count := 0
-var _initial_secrets_count := 3
+var _initial_secrets_count := 0
+
+var _lock_positions := []
+
+const MIDDLEGROUND_LAYER_ID := 2
 
 const BOX_CELL_SCENE := preload("res://actors/Cell/BoxCell.tscn")
 const ITEM_CELL_SCENE := preload("res://actors/Cell/ItemCell.tscn")
@@ -32,7 +36,13 @@ func _ready() -> void:
     if !GameMusic.playing:
         GameMusic.play()
 
-    _scanner.finished.connect(_on_scan_finished)
+    _scanner.scan_started.connect(func():
+        %UI/Overlay/AnimationPlayer.play("alert")
+    )
+    _scanner.scan_finished.connect(func():
+        %UI/Overlay/AnimationPlayer.play("fade")
+    )
+
     _scanner.player_detected.connect(_on_player_detected)
     _player.fired.connect(_on_player_fire.bind(_player))
     _player.dead.connect(_on_player_dead)
@@ -42,15 +52,12 @@ func _ready() -> void:
     var size = _map.get_used_rect()
     _scanner.set_scan_radius(size.size.length() / 2.0 * 64.0)
 
-    var middleground_layer_id := 2
-    var foreground_layer_id := 3
-
     # Spawn boxes
-    for cell_position in _map.get_used_cells(middleground_layer_id):
-        var cell_tile_data := _map.get_cell_tile_data(middleground_layer_id, cell_position)
+    for cell_position in _map.get_used_cells(MIDDLEGROUND_LAYER_ID):
+        var cell_tile_data := _map.get_cell_tile_data(MIDDLEGROUND_LAYER_ID, cell_position)
         var cell_name := cell_tile_data.get_custom_data("name") as String
-        var source_id := _map.get_cell_source_id(middleground_layer_id, cell_position)
-        var atlas_coords := _map.get_cell_atlas_coords(middleground_layer_id, cell_position)
+        var source_id := _map.get_cell_source_id(MIDDLEGROUND_LAYER_ID, cell_position)
+        var atlas_coords := _map.get_cell_atlas_coords(MIDDLEGROUND_LAYER_ID, cell_position)
         var tileset_source := _map.tile_set.get_source(source_id) as TileSetAtlasSource
         var texture_region := tileset_source.get_tile_texture_region(atlas_coords)
 
@@ -67,7 +74,7 @@ func _ready() -> void:
             sprite.region_rect = texture_region
 
             # Clear cell
-            _map.set_cell(middleground_layer_id, cell_position, -1)
+            _map.set_cell(MIDDLEGROUND_LAYER_ID, cell_position, -1)
 
         elif cell_name == "item":
             var cell_instance := ITEM_CELL_SCENE.instantiate() as ItemCell
@@ -82,7 +89,7 @@ func _ready() -> void:
             sprite.region_rect = texture_region
 
             # Clear cell
-            _map.set_cell(middleground_layer_id, cell_position, -1)
+            _map.set_cell(MIDDLEGROUND_LAYER_ID, cell_position, -1)
 
             _initial_keys_count += 1
 
@@ -95,7 +102,7 @@ func _ready() -> void:
             _middleground_cells.add_child(enemy)
             enemy.position = (cell_position * 64.0) + (64.0 / 2.0) * Vector2.ONE
 
-            _map.set_cell(middleground_layer_id, cell_position, -1)
+            _map.set_cell(MIDDLEGROUND_LAYER_ID, cell_position, -1)
 
             _initial_enemy_count += 1
 
@@ -111,19 +118,56 @@ func _ready() -> void:
 
             cell_instance.effect = ZoneCell.ZoneCellEffect.Safe
 
-            _map.set_cell(middleground_layer_id, cell_position, -1)
+            _map.set_cell(MIDDLEGROUND_LAYER_ID, cell_position, -1)
 
+        elif cell_name == "lock":
+            _lock_positions.push_back(cell_position)
+
+    # Scan secrets
+    for node in get_tree().get_nodes_in_group("secret_zone"):
+        var zone = node as SecretZone
+        zone.found.connect(func():
+            _secrets_count += 1
+        )
+        _initial_secrets_count += 1
+
+    # Scan weird zones
+    for node in get_tree().get_nodes_in_group("weird"):
+        var weird = node as Weird
+        weird.weird_started.connect(func():
+            GameMusic.fade_out()
+            %ChromaticVFX.enabled = true
+            %ChromaticVFX/AnimationPlayer.play("wave")
+            pass
+        )
+        weird.weird_stopped.connect(func():
+            GameMusic.fade_in()
+            %ChromaticVFX/AnimationPlayer.play("fade_out")
+            pass
+        )
 
 func _process(_delta: float) -> void:
-    _camera.global_position = _player.global_position
+    _camera.global_position = _player.global_position.round()
 
     _score_ui.text = "Keys: %d / %d\nEnemies: %d / %d\nSecrets: %d / %d" % [_keys_count, _initial_keys_count, _enemy_killed, _initial_enemy_count, _secrets_count, _initial_secrets_count]
-    _health_ui.text = "Health\n%d" % _player._current_life_points
+
+    var health_ratio = _player._current_life_points / float(_player.max_life_points)
+    _health_ui.value = health_ratio * 100
+    if health_ratio <= 0.25:
+        _health_ui.modulate = Color.RED
+    elif health_ratio <= 0.5:
+        _health_ui.modulate = Color.ORANGE
+    elif health_ratio <= 0.75:
+        _health_ui.modulate = Color.YELLOW
+    else:
+        _health_ui.modulate = Color.GREEN
 
     if _scanner.is_scanning():
         _timer_ui.text = "SCANNING"
+        _camera.shake_ratio = 1.0
     else:
         _timer_ui.text = "Scanning in\n%2.2f seconds" % _scanner.get_remaining_seconds_before_scan()
+        _camera.shake_ratio = 0.0
 
 func _input(event: InputEvent) -> void:
     if event is InputEventKey:
@@ -132,9 +176,6 @@ func _input(event: InputEvent) -> void:
 
         if event.pressed && event.keycode == KEY_F1:
             _scanner.trigger()
-
-func _on_scan_finished() -> void:
-    print("Scan finished.")
 
 func _on_player_detected() -> void:
     _player.kill()
@@ -159,7 +200,7 @@ func _on_player_dead() -> void:
     _scanner.stop()
     %GameOverUI.visible = true
 
-    await get_tree().create_timer(3.0).timeout
+    await get_tree().create_timer(1.0).timeout
     GameSceneTransitioner.fade_to_scene_path("res://tests/TestLevel.tscn")
 
 func _on_enemy_dead(enemy: Player) -> void:
@@ -168,4 +209,9 @@ func _on_enemy_dead(enemy: Player) -> void:
 
 func _on_item_picked(item: ItemCell) -> void:
     _keys_count += 1
+    _unlock_locks()
     item.queue_free()
+
+func _unlock_locks() -> void:
+    for pos in _lock_positions:
+        _map.set_cell(MIDDLEGROUND_LAYER_ID, pos, -1)

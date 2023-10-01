@@ -12,15 +12,15 @@ config_version=5
 
 config/name="Ludum Dare 54"
 run/main_scene="res://screens/BootScreen.tscn"
-config/features=PackedStringArray("4.2", "GL Compatibility")
+config/features=PackedStringArray("4.1", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
+GameData="*res://autoloads/GameData.gd"
 GameDebugTools="*res://autoloads/GameDebugTools.gd"
 GameMusic="*res://autoloads/GameMusic.tscn"
 GameSceneTransitioner="*res://autoloads/GameSceneTransitioner.gd"
-GameData="*res://autoloads/GameData.gd"
 
 [display]
 
@@ -34,7 +34,7 @@ enabled=PackedStringArray("res://addons/sxgd/plugin.cfg")
 
 [engine]
 
-version="4.2.dev5"
+version="4.1.1"
 
 [input]
 
@@ -82,6 +82,8 @@ rotate_right={
 2d_physics/layer_2="Player"
 2d_physics/layer_3="Bullets"
 2d_physics/layer_4="Zones"
+2d_physics/layer_5="Tip"
+2d_physics/layer_6="Items"
 
 [rendering]
 

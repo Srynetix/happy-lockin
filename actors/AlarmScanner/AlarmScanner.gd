@@ -2,7 +2,8 @@ extends Node2D
 class_name AlarmScanner
 
 signal player_detected()
-signal finished()
+signal scan_started()
+signal scan_finished()
 
 const MINIMUM_SCAN_RADIUS := 100.0
 
@@ -17,7 +18,7 @@ enum ScanState {
 @onready var _shape := _collision_shape.shape as CircleShape2D
 @onready var _scan_sfx := %ScanSFX as AudioStreamPlayer
 
-var _initial_scan_delay := 20.0
+var _initial_scan_delay := 10.0
 var _initial_scan_radius := 1000.0
 
 var _scan_speed := 4.0
@@ -45,7 +46,7 @@ func _ready() -> void:
 
 func _handle_state_transition(prev_state: ScanState, new_state: ScanState) -> void:
     if prev_state == ScanState.Scan:
-        finished.emit()
+        scan_finished.emit()
         _scan_sfx.stop()
 
     if new_state == ScanState.Init:
@@ -57,6 +58,7 @@ func _handle_state_transition(prev_state: ScanState, new_state: ScanState) -> vo
         _current_scan_radius = _initial_scan_radius
         _shape.radius = _initial_scan_radius
         _scan_sfx.play()
+        scan_started.emit()
 
     if prev_state == ScanState.Fade:
         _current_scan_radius = _initial_scan_radius

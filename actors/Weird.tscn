@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://xsujqrbf86eh"]
+
+[ext_resource type="Script" path="res://actors/Weird.gd" id="1_3eosv"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wxhau"]
+size = Vector2(64, 64)
+
+[node name="Weird" type="Area2D" groups=["weird"]]
+collision_layer = 8
+collision_mask = 2
+script = ExtResource("1_3eosv")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_wxhau")

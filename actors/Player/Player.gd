@@ -12,6 +12,8 @@ enum BehaviorType {
 const MOVE_SPEED := 100
 const MOVE_DAMPING := 0.75
 
+const AI_MOVE_SPEED := 10
+
 const ARROW_MARGIN := 24
 const ARROW_SIZE := 4
 const ARROW_COLOR := Color.ALICE_BLUE
@@ -34,7 +36,6 @@ var _enemy_ready_to_fire := false
 var _fire_enemy_delay := Timer.new()
 var _fire_timer := Timer.new()
 var _hit_timer := Timer.new()
-# var _zone_detection_timer := Timer.new()
 
 var _current_zone_cell: ZoneCell = null
 
@@ -42,6 +43,7 @@ var max_life_points := 5
 var aim_direction := Vector2.RIGHT
 var acceleration := Vector2.ZERO
 var is_safe := false
+var _dead := false
 
 var _current_life_points := max_life_points
 
@@ -49,7 +51,6 @@ func _ready() -> void:
     add_child(_fire_timer)
     add_child(_hit_timer)
     add_child(_fire_enemy_delay)
-    # add_child(_zone_detection_timer)
 
     if behavior_type == BehaviorType.Player:
         _fire_timer.wait_time = FIRE_COOLDOWN
@@ -174,7 +175,7 @@ func _physics_process(_delta: float) -> void:
         if _raycast.is_colliding():
             var collider = _raycast.get_collider()
             if collider is Player:
-                if collider.behavior_type == BehaviorType.Player:
+                if collider.behavior_type == BehaviorType.Player and !collider._dead:
                     player_detected = true
 
                     if _enemy_ready_to_fire:
@@ -198,6 +199,7 @@ func _draw_arrow() -> void:
 func kill() -> void:
     set_physics_process(false)
     _kill_sfx.spawn()
+    _dead = true
     dead.emit()
 
 func _get_player() -> Player:

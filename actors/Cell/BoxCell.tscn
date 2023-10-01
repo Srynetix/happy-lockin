@@ -1,10 +1,19 @@
-[gd_scene load_steps=6 format=3 uid="uid://cwo60skhuyryv"]
+[gd_scene load_steps=9 format=3 uid="uid://cwo60skhuyryv"]
 
 [ext_resource type="PackedScene" uid="uid://dl41c7n6vwui4" path="res://actors/Cell/Cell.tscn" id="1_b1nns"]
 [ext_resource type="Script" path="res://actors/Cell/BoxCell.gd" id="1_duagn"]
 [ext_resource type="AudioStream" uid="uid://ba7bdkwpuodfv" path="res://audio/box_crack.wav" id="3_itxp2"]
 [ext_resource type="Script" path="res://actors/SimpleFX/SimpleFX.gd" id="4_2ripx"]
 [ext_resource type="AudioStream" uid="uid://tik0sp17hj74" path="res://audio/enemy_hit.wav" id="5_1ykgh"]
+[ext_resource type="Script" path="res://actors/SimpleFX/SimpleVFX.gd" id="6_ivykh"]
+
+[sub_resource type="Curve" id="Curve_332qa"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.984211, 0), -1.75243, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_hvx7h"]
+offsets = PackedFloat32Array(0, 0.0662252, 0.529801, 0.94702, 1)
+colors = PackedColorArray(0, 0, 0, 0, 0, 0, 0, 1, 0.12234, 0.0792154, 0.0648404, 1, 0.278431, 0.180392, 0.14902, 0, 0.240754, 0.15597, 0.1287, 0.241379)
 
 [node name="BoxCell" instance=ExtResource("1_b1nns")]
 script = ExtResource("1_duagn")
@@ -20,3 +29,23 @@ unique_name_in_owner = true
 stream = ExtResource("5_1ykgh")
 bus = &"FX"
 script = ExtResource("4_2ripx")
+
+[node name="BreakVFX" type="CPUParticles2D" parent="." index="4"]
+unique_name_in_owner = true
+emitting = false
+amount = 24
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+emission_shape = 1
+emission_sphere_radius = 32.0
+direction = Vector2(0, -1)
+spread = 24.55
+gravity = Vector2(0, 1500)
+initial_velocity_min = 171.72
+initial_velocity_max = 292.93
+scale_amount_min = 48.0
+scale_amount_max = 48.0
+scale_amount_curve = SubResource("Curve_332qa")
+color_ramp = SubResource("Gradient_hvx7h")
+script = ExtResource("6_ivykh")

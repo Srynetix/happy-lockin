@@ -1,7 +1,66 @@
-[gd_scene load_steps=2 format=3 uid="uid://bmasvy6c4ssfj"]
+[gd_scene load_steps=7 format=3 uid="uid://bmasvy6c4ssfj"]
 
 [ext_resource type="AudioStream" uid="uid://bjdyglddfanfm" path="res://audio/theme1.ogg" id="1_2antp"]
+[ext_resource type="Script" path="res://autoloads/GameMusic.gd" id="2_m7a5t"]
+
+[sub_resource type="Animation" id="Animation_3ms6i"]
+resource_name = "fade_in"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:volume_db")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-80.0, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_0owd0"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:volume_db")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_j6ulv"]
+resource_name = "fade_out"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:volume_db")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, -80.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_iy0gf"]
+_data = {
+"RESET": SubResource("Animation_0owd0"),
+"fade_in": SubResource("Animation_3ms6i"),
+"fade_out": SubResource("Animation_j6ulv")
+}
 
 [node name="GameMusic" type="AudioStreamPlayer"]
 stream = ExtResource("1_2antp")
 bus = &"Music"
+script = ExtResource("2_m7a5t")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_iy0gf")
+}
